@@ -1,3 +1,36 @@
-node_modules
+# Ignore Node.js dependencies
+node_modules/
+
+# Ignore environment variables
 .env
-dist
+.env.*
+.env.local
+
+# Ignore build/output directories
+dist/
+build/
+
+# Ignore Firebase credentials
+firebase-admin.json
+job-portal-automation.json
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore npm/yarn cache
+.npm
+.yarn
+.yarnrc
+
+# Ignore coverage reports
+coverage/
+.nyc_output/
