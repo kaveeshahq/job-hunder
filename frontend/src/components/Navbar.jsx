@@ -53,7 +53,7 @@ export default function Navbar() {
 
         {/* Desktop navigation */}
         <ul className="hidden lg:flex space-x-8">
-          {["Home", "Join Us"].map((item, index) => (
+          {["Home", "Click to Start"].map((item, index) => (
             <li key={index}>
               <NavLink
                 to={item === "Home" ? "/" : "/apply"}
@@ -86,7 +86,7 @@ export default function Navbar() {
         }`}
       >
         <ul className="p-4 space-y-4">
-          {["Home", "Join Us"].map((item, index) => (
+          {["Home", "Click to Start"].map((item, index) => (
             <li key={index}>
               <NavLink
                 to={item === "Home" ? "/" : "/apply"}

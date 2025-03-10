@@ -10,9 +10,8 @@ function AppContent() {
   const [loading, setLoading] = useState(true); // Start with loading true
   const loadingTimeoutRef = useRef(null);
   
-  // This effect runs only once when the component first mounts
+  // This  runs only once when the component first mounts
   useEffect(() => {
-    // Hide loader after initial page load
     const initialLoadTimeout = setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -20,15 +19,13 @@ function AppContent() {
     return () => clearTimeout(initialLoadTimeout);
   }, []);
   
-  // This effect runs when location changes (navigation between pages)
+  // This effect runs when (navigation between pages)
   useEffect(() => {
-    // Don't show loader on initial render since we're already showing it
     if (loadingTimeoutRef.current === null) {
-      loadingTimeoutRef.current = true; // Mark first render complete
+      loadingTimeoutRef.current = true; 
       return;
     }
     
-    // Show loader for navigation
     setLoading(true);
     
     const navigationTimeout = setTimeout(() => {
@@ -40,7 +37,6 @@ function AppContent() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Show Loader when loading is true */}
       {loading && <Loader />}
 
       {/* Navbar */}

@@ -48,15 +48,16 @@ export default function ApplicationForm() {
     data.append("cv", formData.cv);
   
     try {
-      const response = await axios.post("http://localhost:5000/api/upload", data, {
+      const API_URL = import.meta.env.VITE_API_URL;
+      const response = await axios.post(`${API_URL}/api/upload`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
   
-      console.log("🔥 Backend Response:", response.data);
+      console.log("Backend Response:", response.data);
       setSuccessMessage("Application submitted successfully!");
       setFormData({ name: "", email: "", phone: "", cv: null });
       
-      // Reset focused states
+     
       setFocused({
         name: false,
         email: false,
@@ -64,7 +65,7 @@ export default function ApplicationForm() {
         cv: false
       });
     } catch (error) {
-      console.error("❌ Error submitting application:", error);
+      console.error("Error submitting application:", error);
       if (error.code === "ERR_NETWORK") {
         setErrorMessage("Network error. Please check your internet connection or ensure the backend server is running.");
       } else {
@@ -80,7 +81,7 @@ export default function ApplicationForm() {
       <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full transform transition-all duration-500 hover:shadow-2xl backdrop-blur-sm bg-opacity-90 border border-blue-100">
         <h1 className="text-3xl font-bold text-center mb-8 text-blue-600 relative">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400">
-            Job Application
+           Enter Your Details
           </span>
           <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-blue-600 to-blue-400 rounded-full"></div>
         </h1>
