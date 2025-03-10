@@ -11,6 +11,8 @@ app.use(cors({
     'https://vitaextract.netlify.app/', 
     'http://localhost:5173'                   
   ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true  
 }));
 app.use(express.json());
