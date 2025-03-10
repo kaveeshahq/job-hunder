@@ -99,53 +99,75 @@ const uploadApplicant = async (req, res) => {
     });
 
     // Send HTTP Request (Webhook)
-    const webhookUrl = "https://rnd-assignment.automations-3d6.workers.dev/";
-    const payload = {
-      cv_data: {
-        personal_info: extractedData.personalInfo,
-        education: extractedData.education,
-        qualifications: extractedData.qualifications,
-        projects: extractedData.projects,
-        cv_public_link: cvUrl,
-      },
-      metadata: {
-        applicant_name: name,
-        email: email,
-        status: process.env.NODE_ENV === "development" ? "testing" : "prod",
-        cv_processed: true,
-        processed_timestamp: new Date().toISOString(),
-      },
-    };
+    try {
+      const webhookUrl = "https://rnd-assignment.automations-3d6.workers.dev/";
+      const payload = {
+        cv_data: {
+          personal_info: extractedData.personalInfo,
+          education: extractedData.education,
+          qualifications: extractedData.qualifications,
+          projects: extractedData.projects,
+          cv_public_link: cvUrl,
+        },
+        metadata: {
+          applicant_name: name,
+          email: email,
+          status: process.env.NODE_ENV === "development" ? "testing" : "prod",
+          cv_processed: true,
+          processed_timestamp: new Date().toISOString(),
+        },
+      };
 
-    const webhookResponse = await axios.post(webhookUrl, payload, {
-      headers: {
-        "X-Candidate-Email": email,
-        "Content-Type": "application/json",
-      },
-    });
+      const webhookResponse = await axios.post(webhookUrl, payload, {
+        headers: {
+          "X-Candidate-Email": email,
+          "Content-Type": "application/json",
+        },
+      });
 
-    console.log("🔥  response:", webhookResponse.status);
+      console.log("🔥 Webhook response:", webhookResponse.status);
+    } catch (webhookError) {
+      // Don't let webhook errors cause the entire process to fail
+      console.error("❌ Webhook error:", webhookError);
+    }
 
     // Send immediate email
-    const immediateEmailSent = await sendImmediateEmail(name, email);
-    if (immediateEmailSent) {
-      console.log(`🔥 Immediate email sent to ${email}`);
-    } else {
-      console.error(`❌ Failed to send immediate email to ${email}`);
+    try {
+      const immediateEmailSent = await sendImmediateEmail(name, email);
+      if (immediateEmailSent) {
+        console.log(`🔥 Immediate email sent to ${email}`);
+      } else {
+        console.error(`❌ Failed to send immediate email to ${email}`);
+      }
+    } catch (emailError) {
+      console.error(`❌ Error sending immediate email: ${emailError}`);
     }
 
     // Schedule follow-up email
-    const timezone = "UTC";
-    const followUpEmailScheduled = scheduleFollowUpEmail(name, email, timezone);
-    if (followUpEmailScheduled) {
-      console.log(`🔥 Follow-up email scheduled for ${email}`);
-    } else {
-      console.error(`❌ Failed to schedule follow-up email for ${email}`);
+    try {
+      const timezone = "UTC";
+      const followUpEmailScheduled = scheduleFollowUpEmail(name, email, timezone);
+      if (followUpEmailScheduled) {
+        console.log(`🔥 Follow-up email scheduled for ${email}`);
+      } else {
+        console.error(`❌ Failed to schedule follow-up email for ${email}`);
+      }
+    } catch (scheduleError) {
+      console.error(`❌ Error scheduling follow-up email: ${scheduleError}`);
     }
 
     // Clean up the uploaded file
     fs.unlinkSync(filePath);
 
+    // Make sure we're not setting headers that conflict with CORS
+    // Explicitly set CORS headers here to ensure they're included
+    res.set({
+      'Access-Control-Allow-Origin': 'https://vitaextract.netlify.app',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Candidate-Email'
+    });
+    
+    // Respond with success
     res.json({
       success: true,
       message: "Uploaded Successfully!",
@@ -153,6 +175,14 @@ const uploadApplicant = async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Error in /api/upload:", error);
+    
+    // Explicitly set CORS headers here too
+    res.set({
+      'Access-Control-Allow-Origin': 'https://vitaextract.netlify.app',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Candidate-Email'
+    });
+    
     res.status(500).json({ success: false, message: "Upload failed!" });
   }
 };

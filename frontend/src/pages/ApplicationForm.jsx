@@ -192,7 +192,7 @@ export default function ApplicationForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-6 text-white font-medium rounded-lg shadow-lg bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full py-3 px-6 text-white font-medium rounded-lg shadow-lg bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-70 cursor-pointer disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center justify-center">

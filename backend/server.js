@@ -8,7 +8,7 @@ const applicantRoutes = require("./routes/applicantRoutes");
 const app = express();
 app.use(cors({
   origin: [
-    'https://vitaextract.netlify.app/', 
+    'https://vitaextract.netlify.app', 
     'http://localhost:5173'                   
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
